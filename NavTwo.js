@@ -6,11 +6,14 @@ import {
   View,
   Button,
 } from "react-native"
-import { TabNavigator } from "react-navigation";
+import { StackNavigator, TabNavigator } from "react-navigation";
 import styles from "./styles"
 
 
 class RecentChatsScreen extends React.Component {
+  static navigationOptions = {
+    title: "Recent",
+  }
   render() {
     return <View>
       <Text>List of recent chats</Text>
@@ -23,6 +26,9 @@ class RecentChatsScreen extends React.Component {
 }
 
 class AllContactsScreen extends React.Component {
+  static navigationOptions = {
+    title: "Recent",
+  }
   render() {
 return <View>
       <Text>List of all chats</Text>
@@ -35,7 +41,7 @@ return <View>
   }
 }
 
-const MainScreenNavigator = TabNavigator({
+const MainScreenNavigator = StackNavigator({
   Recent: { screen: RecentChatsScreen },
   All: { screen: AllContactsScreen },
 });

@@ -13,6 +13,7 @@ import {
 } from "react-native"
 import { TabNavigator } from "react-navigation"
 import NavOne from "./NavOne"
+import NavTwo from "./NavTwo"
 
 function buildAction(routes) {
   const first = {}
