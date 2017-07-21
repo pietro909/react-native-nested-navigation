@@ -14,9 +14,32 @@ import {
 import { TabNavigator } from "react-navigation"
 import NavOne from "./NavOne"
 
+function buildAction(routes) {
+  const first = {}
+  const { head } = routes.reduce(({ previousAction, head }, routeName) => {
+    const nextAction = {
+      params: undefined,
+      action: undefined,
+      routeName,
+      type: "Navigation/NAVIGATE"
+    }
+    previousAction.action = nextAction
+    return { previousAction: nextAction, head }
+  }, { previousAction: first, head: first })
+  return head.action
+}
+
 export default class Router extends Component {
+  constructor(props) {
+    super(props)
+    window.goTo = path =>
+      this.navigator.dispatch(buildAction(path))
+  }
+
   render() {
-    return <NavOne />
+    return <NavOne
+     ref={navigatorRef => this.navigator = navigatorRef}
+    />
   }
 }
 

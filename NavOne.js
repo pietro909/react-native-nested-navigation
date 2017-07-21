@@ -8,6 +8,7 @@ import {
 } from "react-native"
 import { TabNavigator } from "react-navigation"
 import styles from "./styles"
+import NavTwo from "./NavTwo"
 
 class Home extends Component {
   static navigationOptions = {
@@ -15,12 +16,7 @@ class Home extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <Button
-          onPress={() => this.props.navigation.navigate("Work")}
-          title="Go to work"
-        />
-      </View>
+      <NavTwo />
     )
   }
 }
@@ -33,7 +29,7 @@ class Work extends Component {
     return (
       <View style={styles.container}>
         <Button
-          onPress={() => this.props.navigation.navigate("Home")}
+          onPress={() => this.props.navigation.navigate("Kitchen")}
           title="Go to home"
         />
       </View>
@@ -42,8 +38,16 @@ class Work extends Component {
 }
 
 const NavOne = TabNavigator({
-  Home: { screen: Home },
-  Work: { screen: Work },
+  Home: { screen: Home, path: "/home/" },
+  Work: { screen: Work, path: "/work" },
 })
 
+const getStateForAction = NavOne.router.getStateForAction
+NavOne.router.getStateForAction = (action, state) => {
+  console.log("one", action, state)
+  const result = getStateForAction(action, state)
+  return result
+}
+
 export default NavOne
+
