@@ -6,48 +6,33 @@ import {
   View,
   Button,
 } from "react-native"
-import { TabNavigator } from "react-navigation"
+import { StackNavigator } from "react-navigation"
 import styles from "./styles"
-import NavTwo from "./NavTwo"
+import MainScreenNavigator from "./NavTwo"
 
-class Home extends Component {
-  static navigationOptions = {
-    tabBarLabel: "Home",
-  }
+class ChatScreen extends React.Component {
+  // Nav options can be defined as a function of the screen's props:
+  static navigationOptions = ({ navigation }) => ({
+    title: `Chat with ${navigation.state.params.user}`,
+  });
   render() {
+    // The screen's current route is passed in to `props.navigation.state`:
+    const { params } = this.props.navigation.state;
     return (
-      <NavTwo />
-    )
-  }
-}
-
-class Work extends Component {
-  static navigationOptions = {
-    tabBarLabel: "Work",
-  }
-  render() {
-    return (
-      <View style={styles.container}>
+      <View>
+        <Text>Chat with {params.user}</Text>
         <Button
-          onPress={() => this.props.navigation.navigate("Kitchen")}
-          title="Go to home"
-        />
+          onPress={() => this.props.navigation.navigate('All')}
+        title="Go to all"
+      />
       </View>
-    )
+    );
   }
 }
 
-const NavOne = TabNavigator({
-  Home: { screen: Home, path: "/home/" },
-  Work: { screen: Work, path: "/work" },
-})
+const SimpleApp = StackNavigator({
+  Home: { screen: MainScreenNavigator },
+  Chat: { screen: ChatScreen },
+});
 
-const getStateForAction = NavOne.router.getStateForAction
-NavOne.router.getStateForAction = (action, state) => {
-  console.log("one", action, state)
-  const result = getStateForAction(action, state)
-  return result
-}
-
-export default NavOne
-
+export default SimpleApp
