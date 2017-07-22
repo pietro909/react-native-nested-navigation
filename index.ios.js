@@ -12,8 +12,7 @@ import {
   View
 } from "react-native"
 import { TabNavigator } from "react-navigation"
-import NavOne from "./NavOne"
-import NavTwo from "./NavTwo"
+import Welcome from "./Welcome"
 
 function buildAction(routes) {
   const first = {}
@@ -33,13 +32,44 @@ function buildAction(routes) {
 export default class Router extends Component {
   constructor(props) {
     super(props)
-    window.goTo = path =>
-      this.navigator.dispatch(buildAction(path))
+    window.goTo = routeName => {
+      this.navigator.dispatch({
+        type: "Navigation/NAVIGATE",
+        routeName: routeName,
+        params: undefined,
+        action: undefined,
+      })
+    }
+    this.state = {
+      hideMainTabBar: false,
+    }
+  }
+
+  componentDidMount() {
+    console.log(this.navigator)
+    // this.navigator.subscribe(e => console.log(e))
+  }
+
+  onNavigationStateChange(prevState, newState, action) {
+    console.info("oNSC", newState, action)
+    if (action.routeName === "Thread") {
+      this.setState({
+        hideMainTabBar: true,
+      })
+    } else if (this.state.hideMainTabBar) {
+      this.setState({
+        hideMainTabBar: false,
+      })
+    }
   }
 
   render() {
-    return <NavOne
-     ref={navigatorRef => this.navigator = navigatorRef}
+    return <Welcome
+      ref={navigatorRef => this.navigator = navigatorRef}
+      screenProps={{
+        hideMainTabBar: this.state.hideMainTabBar,
+      }}
+      onNavigationStateChange={this.onNavigationStateChange.bind(this)}
     />
   }
 }
