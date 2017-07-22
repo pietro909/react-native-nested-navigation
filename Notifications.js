@@ -14,8 +14,14 @@ export default class NotificationsScreen extends Component {
     return <View style={styles.container}>
       <Text>List of notifications</Text>
       <Text style={ styles.instructions }>
-      {"Just a plain list, you can't navigate"}
+      {"Should be able to go straight to a thread from a notification"}
       </Text>
+      <Button
+        onPress={() =>
+          this.props.navigation.navigate('Thread', { id: 999 })
+        }
+        title="Open thread"
+      />
     </View>
   }
 }
