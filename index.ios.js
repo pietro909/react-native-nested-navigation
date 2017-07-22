@@ -5,58 +5,46 @@
  */
 
 import React, { Component } from "react"
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from "react-native"
+import { AppRegistry } from "react-native"
 import { TabNavigator } from "react-navigation"
 import Welcome from "./Welcome"
-
-function buildAction(routes) {
-  const first = {}
-  const { head } = routes.reduce(({ previousAction, head }, routeName) => {
-    const nextAction = {
-      params: undefined,
-      action: undefined,
-      routeName,
-      type: "Navigation/NAVIGATE"
-    }
-    previousAction.action = nextAction
-    return { previousAction: nextAction, head }
-  }, { previousAction: first, head: first })
-  return head.action
-}
 
 export default class Router extends Component {
   constructor(props) {
     super(props)
-    window.goTo = routeName => {
-      this.navigator.dispatch({
-        type: "Navigation/NAVIGATE",
-        routeName: routeName,
-        params: undefined,
-        action: undefined,
-      })
-    }
     this.state = {
       hideMainTabBar: false,
     }
   }
 
-  componentDidMount() {
-    console.log(this.navigator)
-    // this.navigator.subscribe(e => console.log(e))
+  onComponentDidMount() {
+    /* I know it's super weird, but this global functions
+     * it's the simplest example of programmatical navigation.
+     */
+    window.goTo = (routeName, params = {})=> {
+      this.navigator.dispatch({
+        type: "Navigation/NAVIGATE",
+        routeName: routeName,
+        params,
+        action: undefined, // for nested actions
+      })
+    }
   }
 
+  /**
+   * The great news is that this callback is executed wherever a navigation
+   * event happens in the tree, no matter the depth.
+   */
   onNavigationStateChange(prevState, newState, action) {
-    console.info("oNSC", newState, action)
+    /* the logic for hiding the main TabBar is hosted here, at top level
+     * based on the value of the route
+     */
     if (action.routeName === "Thread") {
       this.setState({
         hideMainTabBar: true,
       })
     } else if (this.state.hideMainTabBar) {
+      // We don't want to trigger a change if not necessary
       this.setState({
         hideMainTabBar: false,
       })
